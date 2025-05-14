@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>d3925812-09a0-474c-bab0-4842605efa01</UserSecretsId>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.15" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.9.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
+		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\GarageApplication\GarageApplication.csproj" />
+		<ProjectReference Include="..\GarageInfrastructure\GarageInfrastructure.csproj" />
+	</ItemGroup>
+
+</Project>

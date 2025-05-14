@@ -1,0 +1,128 @@
+﻿@model List<MyBooking>
+
+<div class="container my-5">
+	<h2 class="mb-4 text-center text-sm-start text-primary">My Bookings</h2>
+
+
+
+
+
+	@if (Model != null && Model.Any())
+	{
+ 
+
+		<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+			<p class="fs-5 fw-semibold text-dark bg-light p-3 rounded shadow-sm mb-0">
+				Showing <span id="totalCardCount" class="text-primary">@Model.Count</span> bookings
+			</p>
+
+			<input type="text" id="bookingSearch" class="form-control w-auto shadow-sm" placeholder="Search by Booking ID..." style="min-width: 350px;" />
+		</div>
+
+
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+			@foreach (var booking in Model)
+			{
+				<div class="col booking-card" data-status="@(booking.IsFullFilled ? "fulfilled" : "pending")">
+					<div class="card shadow h-100 border-0 position-relative">
+						<span class="badge position-absolute top-0 end-0 m-2
+                                     @(booking.IsFullFilled ? "bg-success" : "bg-danger")">
+							@(booking.IsFullFilled ? "Fulfilled" : "Pending")
+						</span>
+
+						<div class="card-body">
+							<h5 class="card-title text-primary">Booking ID</h5>
+							<p class="card-text text-break">@booking.BookingID.ToString().ToUpper()</p>
+
+
+
+							<p class="card-text"><strong>Quantity:</strong> @booking.Quantity</p>
+							<p class="card-text"><strong>Total Price:</strong> QR @booking.TotalPrice</p>
+							<p class="card-text"><strong>Date:</strong> @booking.BookingDate.ToString("yyyy-MM-dd HH:mm")</p>
+
+							@if (!booking.IsFullFilled)
+							{
+								<div class="mt-auto pt-3">
+									<button id="cancelBooking" class="btn btn-outline-danger w-100 cancel-booking-btn" data-booking-id="@booking.BookingID">
+										Cancel Booking
+									</button>
+								</div>
+							}
+
+							
+							
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		<div class="alert alert-info text-primary text-center">You have no bookings yet.</div>
+	}
+</div>
+
+
+@section scripts {
+	<script>
+		$('#filterStatus').on('change', function () {
+			const selected = $(this).val();
+			let visibleCount = 0;
+
+			$('.booking-card').each(function () {
+				const status = $(this).data('status');
+				if (selected === 'all' || status === selected) {
+					$(this).show();
+					visibleCount++;
+				} else {
+					$(this).hide();
+				}
+			});
+
+			$('#totalCardCount').text(visibleCount);
+		});
+
+		$('#bookingSearch').on('input', function () {
+			const query = $(this).val().toLowerCase();
+			let count = 0;
+
+			$('.booking-card').each(function () {
+				const id = $(this).find('.card-text').first().text().toLowerCase();
+				if (id.includes(query)) {
+					$(this).show();
+					count++;
+				} else {
+					$(this).hide();
+				}
+			});
+
+			$('#totalCardCount').text(count);
+		});
+
+		$('#cancelBooking').on('click', function() {
+
+			let bookingId = $(this).data('booking-id');
+		
+
+		$.ajax({
+			url: '/Booking/CancelBooking',
+			type: 'DELETE',
+			contentType: 'application/json',
+			data: JSON.stringify({ bookingId: bookingId}),
+			success: function (data) {
+				if(data){
+					location.reload();
+					alert("cancelled success.");
+				}
+			},
+			error: function (err) {
+				
+				alert("Failed.");
+			}
+		});
+
+		});
+	</script>
+
+}

@@ -1,0 +1,98 @@
+﻿@{
+	ViewData["Title"] = "Details Page";
+}
+
+@model Products
+
+<div class="container py-5">
+	<div class="row g-4 align-items-start">
+		<!-- Product Image -->
+		<div class="col-12 col-md-6">
+			<img src="https://source.unsplash.com/random/600x600?product" alt="Product" class="product-img">
+		</div>
+
+		<!-- Product Details -->
+		<div class="col-12 col-md-6">
+			<h2 class="mb-3">@Model.Name</h2>
+			<p class="text-muted">@Model.Description.</p>
+			<h4 class="text-primary">@Model.Price</h4>
+
+			@{
+				bool inStock = Model.Stock > 0;
+				bool isAuthenticated = User.Identity != null && User.Identity.IsAuthenticated;
+			}
+
+			@if (!inStock)
+			{
+				<p class="text-danger fs-5">Currently out of stock!</p>
+			}
+			else if (!isAuthenticated)
+			{
+				<p class="text-danger fs-6 fw-bold">You need to be logged in to book this item. Please sign in or create an account.</p>
+			}
+			else
+			{
+				<form method="post" id="bookProductForm">
+					<input type="hidden" id="ProductID" name="ProductID" value="@Model.ProductID" />
+
+					<div class="my-3">
+						<label for="quantity" class="form-label">Quantity</label>
+						<input type="number" id="quantity" name="Quantity" class="form-control w-50" min="1" value="1" required>
+					</div>
+
+					<button type="submit" class="btn btn-primary btn-lg mt-2">Add to Cart</button>
+				</form>
+
+			}
+
+
+
+		</div>
+	</div>
+
+	<!-- Product Description Section -->
+	<div class="row mt-5">
+		<div class="col-12">
+			<h4 class="mb-3">Product Description</h4>
+			<p>
+				This product is crafted with high-quality materials and designed to meet the needs of modern consumers. Whether you're using it daily or occasionally, it delivers reliable performance and a sleek look. Perfect for those who value both function and style.
+			</p>
+			<p>
+				Key features include durability, ease of use, and a stylish finish. Suitable for home, office, or on-the-go use, this product stands out with its attention to detail and premium build quality. Backed by great customer reviews and strong warranty support.
+			</p>
+		</div>
+	</div>
+</div>
+
+
+@section scripts {
+	<script>
+		$("#bookProductForm").submit(function (e) {
+			e.preventDefault();
+
+				var quantity = $("#quantity").val();
+		var formData = {
+		productID: $("#ProductID").val(),
+
+			quantity: quantity,
+			totalPrice: quantity * @Model.Price
+		};
+
+
+			$.ajax({
+				url: "@Url.Action("BookProduct", "Product")",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify(formData),
+				success: function () {
+					location.reload();
+					alert("product booked successfuly.");
+
+				},
+				error: function (xhr) {
+					alert("Booking failed: " + xhr.responseText);
+				}
+			});
+		});
+	</script>
+}

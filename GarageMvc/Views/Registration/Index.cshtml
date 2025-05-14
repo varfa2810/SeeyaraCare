@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Registration Page.</h1>
+
+@section scripts {
+    @Html.Raw("<script src='https://cdn.jsdelivr.net/npm/@microsoft/signalr@latest/dist/browser/signalr.js'></script>")
+
+    @* This is the script for notification*@
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/notificationhub")
+            .build();
+
+        connection.on("ReceiveNotification", (user, message) => {
+            console.log(`${user}: ${message}`);
+        });
+
+        connection.start().then(() => {
+            connection.invoke("SendNotification", "Alice", "How are u!");
+        });
+    </script>
+
+
+
+
+}
