@@ -25,6 +25,7 @@ builder.Services.AddScoped<IAuthentication, Authentication>();
 builder.Services.AddScoped<IHome, Home>();
 builder.Services.AddScoped<IMyBookings, MyBookings>();
 builder.Services.AddScoped<IProductDetails, ProductDetails>();
+builder.Services.AddScoped<IRegistration, Registration>();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
