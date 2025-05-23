@@ -1,28 +1,120 @@
-﻿@{
-    ViewData["Title"] = "Register";
+﻿@model Register;
+
+@{
+	ViewData["Title"] = "Register";
 }
 
-<h1>Registration Page.</h1>
+<div class="container-fluid bg-light  d-flex align-items-center justify-content-center px-0">
+    <div class="w-100">
+        <div class="card shadow-sm border-0 rounded-0">
+            <div class="card-header bg-primary text-white text-center py-2">
+                <h2 class="mb-0">Create Your Account</h2>
+            </div>
+            <h6 class="text-muted text-center pt-3">Fields marked with <span class="text-danger">*</span> are required.</h6>
+
+            <div class="p-4">
+                <form asp-action="Register" asp-controller="RegistratioonUser" method="post">
+                    <div class="row g-4">
+                        <!-- Basic Info -->
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input asp-for="FirstName" class="form-control form-control-lg" />
+                            <span asp-validation-for="FirstName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input asp-for="LastName" class="form-control form-control-lg" />
+                            <span asp-validation-for="LastName" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-12 col-lg-4">
+                            <label asp-for="Email" class="form-label">Email</label>
+                            <input asp-for="Email" class="form-control form-control-lg" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Password & DOB -->
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" type="password" class="form-control form-control-lg" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="DOB" class="form-label">Date of Birth</label>
+                            <input asp-for="DOB" type="date" class="form-control form-control-lg" />
+                            <span asp-validation-for="DOB" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 col-lg-4">
+                            <label asp-for="RoleID" class="form-label">Role</label>
+                            <select asp-for="RoleID" class="form-select form-select-lg">
+                                <option value="">-- Select Role --</option>
+                                <option value="FDBE0E1C-9771-4634-972B-3A145AF1F438">User</option>
+                            </select>
+                            <span asp-validation-for="RoleID" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Random Fields -->
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">Favorite Color</label>
+                            <input name="FavoriteColor" class="form-control form-control-lg" placeholder="e.g. Blue" />
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">Phone Number</label>
+                            <input name="PhoneNumber" type="tel" class="form-control form-control-lg" placeholder="+1-234-567-890" />
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">LinkedIn Profile</label>
+                            <input name="LinkedIn" type="url" class="form-control form-control-lg" placeholder="https://linkedin.com/in/yourname" />
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">Upload Resume</label>
+                            <input name="Resume" type="file" class="form-control form-control-lg" />
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">Preferred Language</label>
+                            <select name="Language" class="form-select form-select-lg">
+                                <option>English</option>
+                                <option>Spanish</option>
+                                <option>French</option>
+                                <option>Hindi</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">Experience Level</label>
+                            <select name="Experience" class="form-select form-select-lg">
+                                <option>Fresher</option>
+                                <option>Mid-Level</option>
+                                <option>Senior</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">Portfolio URL</label>
+                            <input name="Portfolio" type="url" class="form-control form-control-lg" placeholder="https://yourportfolio.com" />
+                        </div>
+                        <div class="col-md-6 col-lg-3">
+                            <label class="form-label">GitHub Username</label>
+                            <input name="GitHub" type="text" class="form-control form-control-lg"  />
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5">Register</button>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="card-footer text-center text-muted py-3">
+                Already have an account? <a asp-action="Login" asp-controller="Authentication">Login here</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 @section scripts {
-    @Html.Raw("<script src='https://cdn.jsdelivr.net/npm/@microsoft/signalr@latest/dist/browser/signalr.js'></script>")
 
-    @* This is the script for notification*@
-    <script>
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/notificationhub")
-            .build();
-
-        connection.on("ReceiveNotification", (user, message) => {
-            console.log(`${user}: ${message}`);
-        });
-
-        connection.start().then(() => {
-            connection.invoke("SendNotification", "Alice", "How are u!");
-        });
-    </script>
-
-
+	<partial name="_ValidationScriptsPartial" />
 
 
 }
